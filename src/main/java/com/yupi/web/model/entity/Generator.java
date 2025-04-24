@@ -1,12 +1,9 @@
 package com.yupi.web.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
-
-import com.yupi.web.meta.Meta;
-import lombok.Data;
 
 /**
  * 代码生成器

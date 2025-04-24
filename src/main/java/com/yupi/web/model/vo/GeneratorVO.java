@@ -4,11 +4,12 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.yupi.web.meta.Meta;
 import com.yupi.web.model.entity.Generator;
+import lombok.Data;
+import org.springframework.beans.BeanUtils;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 /**
  * 代码生成器视图

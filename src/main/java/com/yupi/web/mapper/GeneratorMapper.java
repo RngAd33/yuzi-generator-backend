@@ -1,7 +1,7 @@
 package com.yupi.web.mapper;
 
-import com.yupi.web.model.entity.Generator;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yupi.web.model.entity.Generator;
 
 /**
  * 代码生成器数据库操作
@@ -11,4 +11,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @createDate 2025-04-24 22:17:20
  * @Entity com.yupi.web.model.entity.Generator
  */
-public interface GeneratorMapper extends BaseMapper<Generator> {}
+public interface GeneratorMapper extends BaseMapper<Generator> {
+}

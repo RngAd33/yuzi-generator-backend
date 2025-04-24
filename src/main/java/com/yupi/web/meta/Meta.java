@@ -1,8 +1,9 @@
 package com.yupi.web.meta;
 
-import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 元数据成员变量

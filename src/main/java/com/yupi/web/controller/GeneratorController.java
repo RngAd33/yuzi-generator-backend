@@ -20,13 +20,13 @@ import com.yupi.web.model.entity.User;
 import com.yupi.web.model.vo.GeneratorVO;
 import com.yupi.web.service.GeneratorService;
 import com.yupi.web.service.UserService;
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 代码生成器接口
@@ -172,7 +172,7 @@ public class GeneratorController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
-                                                            HttpServletRequest request) {
+                                                                 HttpServletRequest request) {
         long current = generatorQueryRequest.getCurrent();
         long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
@@ -191,7 +191,7 @@ public class GeneratorController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<GeneratorVO>> listMyGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
-                                                              HttpServletRequest request) {
+                                                                   HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

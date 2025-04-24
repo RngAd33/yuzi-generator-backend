@@ -16,7 +16,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,title,content,tags,userId,createTime,updateTime,isDelete
+        id
+        ,title,content,tags,userId,createTime,updateTime,isDelete
     </sql>
 
     <select id="listPostWithDelete" resultType="com.yupi.web.model.entity.Post">
