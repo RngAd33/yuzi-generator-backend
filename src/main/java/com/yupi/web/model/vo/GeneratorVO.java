@@ -1,11 +1,9 @@
 package com.yupi.web.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.yupi.web.meta.Meta;
-import com.yupi.web.model.entity.Post;
+import com.yupi.web.model.entity.Generator;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -120,30 +118,37 @@ public class GeneratorVO implements Serializable {
      * @param generatorVO
      * @return
      */
-    public static Post voToObj(GeneratorVO generatorVO) {
+    public static Generator voToObj(GeneratorVO generatorVO) {
         if (generatorVO == null) {
             return null;
         }
-        Post post = new Post();
-        BeanUtils.copyProperties(generatorVO, post);
+        Generator generator = new Generator();
+        BeanUtils.copyProperties(generatorVO, generator);
         List<String> tagList = generatorVO.getTags();
-        post.setTags(JSONUtil.toJsonStr(tagList));
-        return post;
+        generator.setTags(JSONUtil.toJsonStr(tagList));
+
+        Meta.FileConfig fileConfig = generatorVO.getFileConfig();
+        generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
+        Meta.ModelConfig modelConfig = generatorVO.getModelConfig();
+        generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
+        return generator;
     }
 
     /**
      * 对象转包装类
      *
-     * @param post
+     * @param generator
      * @return
      */
-    public static GeneratorVO objToVo(Post post) {
-        if (post == null) {
+    public static GeneratorVO objToVo(Generator generator) {
+        if (generator == null) {
             return null;
         }
         GeneratorVO generatorVO = new GeneratorVO();
-        BeanUtils.copyProperties(post, generatorVO);
-        generatorVO.setTags(JSONUtil.toList(post.getTags(), String.class));
+        BeanUtils.copyProperties(generator, generatorVO);
+        generatorVO.setTags(JSONUtil.toList(generator.getTags(), String.class));
+        generatorVO.setFileConfig(JSONUtil.toBean(generator.getFileConfig(), Meta.FileConfig.class));
+        generatorVO.setModelConfig(JSONUtil.toBean(generator.getModelConfig(), Meta.ModelConfig.class));
         return generatorVO;
     }
 }

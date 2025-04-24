@@ -51,7 +51,7 @@ public class Generator {
     /**
      * 标签列表（json 数组）
      */
-    private List<String> tags;
+    private String tags;
 
     /**
      * 图片
@@ -61,12 +61,12 @@ public class Generator {
     /**
      * 文件配置（json字符串）
      */
-    private Meta.FileConfig fileConfig;
+    private String fileConfig;
 
     /**
      * 模型配置（json字符串）
      */
-    private Meta.ModelConfig modelConfig;
+    private String modelConfig;
 
     /**
      * 代码生成器产物路径
