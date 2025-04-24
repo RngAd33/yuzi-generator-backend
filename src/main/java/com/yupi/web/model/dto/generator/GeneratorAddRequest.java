@@ -18,12 +18,6 @@ import lombok.Data;
 public class GeneratorAddRequest implements Serializable {
 
     /**
-     * id
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
-
-    /**
      * 名称
      */
     private String name;
@@ -78,28 +72,6 @@ public class GeneratorAddRequest implements Serializable {
      */
     private Integer status;
 
-    /**
-     * 创建用户 id
-     */
-    private Long userId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
 }

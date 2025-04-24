@@ -12,7 +12,7 @@ import com.yupi.web.meta.Meta;
 import lombok.Data;
 
 /**
- * 更新请求
+ * 更新请求（管理员）
  */
 @Data
 public class GeneratorUpdateRequest implements Serializable {
@@ -20,7 +20,6 @@ public class GeneratorUpdateRequest implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -78,28 +77,5 @@ public class GeneratorUpdateRequest implements Serializable {
      */
     private Integer status;
 
-    /**
-     * 创建用户 id
-     */
-    private Long userId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
 }

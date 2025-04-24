@@ -12,14 +12,14 @@ import com.yupi.web.meta.Meta;
 import lombok.Data;
 
 /**
- * 编辑请求
+ * 编辑请求（用户）
  */
 @Data
 public class GeneratorEditRequest implements Serializable {
+
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -72,33 +72,5 @@ public class GeneratorEditRequest implements Serializable {
      */
     private String distPath;
 
-    /**
-     * 状态
-     */
-    private Integer status;
-
-    /**
-     * 创建用户 id
-     */
-    private Long userId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
 }

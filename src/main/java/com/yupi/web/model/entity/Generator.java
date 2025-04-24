@@ -10,9 +10,10 @@ import lombok.Data;
 
 /**
  * 代码生成器
+ *
  * @TableName generator
  */
-@TableName(value ="generator")
+@TableName(value = "generator")
 @Data
 public class Generator {
 
