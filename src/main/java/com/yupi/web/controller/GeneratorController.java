@@ -10,6 +10,7 @@ import com.yupi.web.common.ResultUtils;
 import com.yupi.web.constant.UserConstant;
 import com.yupi.web.exception.BusinessException;
 import com.yupi.web.exception.ThrowUtils;
+import com.yupi.web.meta.Meta;
 import com.yupi.web.model.dto.generator.GeneratorAddRequest;
 import com.yupi.web.model.dto.generator.GeneratorEditRequest;
 import com.yupi.web.model.dto.generator.GeneratorQueryRequest;
@@ -61,6 +62,9 @@ public class GeneratorController {
         if (tags != null) {
             generator.setTags(JSONUtil.toJsonStr(tags));
         }
+        Meta.FileConfig fileConfig = generatorAddRequest.getFileConfig();
+        Meta.ModelConfig modelConfig = generatorAddRequest.getModelConfig();
+
         generatorService.validGenerator(generator, true);
         User loginUser = userService.getLoginUser(request);
         generator.setUserId(loginUser.getId());
