@@ -19,14 +19,9 @@ public class GeneratorQueryRequest extends PageRequest implements Serializable {
     private Long id;
 
     /**
-     * notId
+     * id
      */
     private Long notId;
-
-    /**
-     * 创建用户 id
-     */
-    private Long userId;
 
     /**
      * 名称
@@ -52,6 +47,16 @@ public class GeneratorQueryRequest extends PageRequest implements Serializable {
      * 作者
      */
     private String author;
+
+    /**
+     * 标签列表（json 数组）
+     */
+    private List<String> tags;
+
+    /**
+     * 图片
+     */
+    private String picture;
 
     /**
      * 代码生成器产物路径

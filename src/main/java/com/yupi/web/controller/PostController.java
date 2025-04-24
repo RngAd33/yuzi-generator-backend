@@ -16,7 +16,7 @@ import com.yupi.web.model.dto.generator.GeneratorQueryRequest;
 import com.yupi.web.model.dto.generator.GeneratorUpdateRequest;
 import com.yupi.web.model.entity.Post;
 import com.yupi.web.model.entity.User;
-import com.yupi.web.model.vo.PostVO;
+import com.yupi.web.model.vo.GeneratorVO;
 import com.yupi.web.service.PostService;
 import com.yupi.web.service.UserService;
 import java.util.List;
@@ -133,7 +133,7 @@ public class PostController {
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<PostVO> getPostVOById(long id, HttpServletRequest request) {
+    public BaseResponse<GeneratorVO> getPostVOById(long id, HttpServletRequest request) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -168,8 +168,8 @@ public class PostController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<GeneratorVO>> listPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+                                                            HttpServletRequest request) {
         long current = generatorQueryRequest.getCurrent();
         long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
@@ -187,8 +187,8 @@ public class PostController {
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<GeneratorVO>> listMyPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+                                                              HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
