@@ -59,11 +59,10 @@ public class GeneratorController {
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorAddRequest, generator);
         List<String> tags = generatorAddRequest.getTags();
-        if (tags != null) {
-            generator.setTags(JSONUtil.toJsonStr(tags));
-        }
         Meta.FileConfig fileConfig = generatorAddRequest.getFileConfig();
+        generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
         Meta.ModelConfig modelConfig = generatorAddRequest.getModelConfig();
+        generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
 
         generatorService.validGenerator(generator, true);
         User loginUser = userService.getLoginUser(request);
