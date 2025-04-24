@@ -8,7 +8,7 @@ import com.yupi.web.constant.CommonConstant;
 import com.yupi.web.exception.BusinessException;
 import com.yupi.web.exception.ThrowUtils;
 import com.yupi.web.mapper.PostMapper;
-import com.yupi.web.model.dto.post.PostQueryRequest;
+import com.yupi.web.model.dto.generator.GeneratorQueryRequest;
 import com.yupi.web.model.entity.Post;
 import com.yupi.web.model.entity.User;
 import com.yupi.web.model.vo.PostVO;
@@ -68,24 +68,24 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     /**
      * 获取查询包装类
      *
-     * @param postQueryRequest
+     * @param generatorQueryRequest
      * @return
      */
     @Override
-    public QueryWrapper<Post> getQueryWrapper(PostQueryRequest postQueryRequest) {
+    public QueryWrapper<Post> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest) {
         QueryWrapper<Post> queryWrapper = new QueryWrapper<>();
-        if (postQueryRequest == null) {
+        if (generatorQueryRequest == null) {
             return queryWrapper;
         }
-        String searchText = postQueryRequest.getSearchText();
-        String sortField = postQueryRequest.getSortField();
-        String sortOrder = postQueryRequest.getSortOrder();
-        Long id = postQueryRequest.getId();
-        String title = postQueryRequest.getTitle();
-        String content = postQueryRequest.getContent();
-        List<String> tagList = postQueryRequest.getTags();
-        Long userId = postQueryRequest.getUserId();
-        Long notId = postQueryRequest.getNotId();
+        String searchText = generatorQueryRequest.getSearchText();
+        String sortField = generatorQueryRequest.getSortField();
+        String sortOrder = generatorQueryRequest.getSortOrder();
+        Long id = generatorQueryRequest.getId();
+        String title = generatorQueryRequest.getTitle();
+        String content = generatorQueryRequest.getContent();
+        List<String> tagList = generatorQueryRequest.getTags();
+        Long userId = generatorQueryRequest.getUserId();
+        Long notId = generatorQueryRequest.getNotId();
         // 拼接查询条件
         if (StringUtils.isNotBlank(searchText)) {
             queryWrapper.and(qw -> qw.like("title", searchText).or().like("content", searchText));

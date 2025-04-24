@@ -10,10 +10,10 @@ import com.yupi.web.common.ResultUtils;
 import com.yupi.web.constant.UserConstant;
 import com.yupi.web.exception.BusinessException;
 import com.yupi.web.exception.ThrowUtils;
-import com.yupi.web.model.dto.post.PostAddRequest;
-import com.yupi.web.model.dto.post.PostEditRequest;
-import com.yupi.web.model.dto.post.PostQueryRequest;
-import com.yupi.web.model.dto.post.PostUpdateRequest;
+import com.yupi.web.model.dto.generator.GeneratorAddRequest;
+import com.yupi.web.model.dto.generator.GeneratorEditRequest;
+import com.yupi.web.model.dto.generator.GeneratorQueryRequest;
+import com.yupi.web.model.dto.generator.GeneratorUpdateRequest;
 import com.yupi.web.model.entity.Post;
 import com.yupi.web.model.entity.User;
 import com.yupi.web.model.vo.PostVO;
@@ -54,7 +54,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addPost(@RequestBody PostAddRequest postAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addPost(@RequestBody GeneratorAddRequest postAddRequest, HttpServletRequest request) {
         if (postAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -101,24 +101,24 @@ public class PostController {
     /**
      * 更新（仅管理员）
      *
-     * @param postUpdateRequest
+     * @param generatorUpdateRequest
      * @return
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
-        if (postUpdateRequest == null || postUpdateRequest.getId() <= 0) {
+    public BaseResponse<Boolean> updatePost(@RequestBody GeneratorUpdateRequest generatorUpdateRequest) {
+        if (generatorUpdateRequest == null || generatorUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Post post = new Post();
-        BeanUtils.copyProperties(postUpdateRequest, post);
-        List<String> tags = postUpdateRequest.getTags();
+        BeanUtils.copyProperties(generatorUpdateRequest, post);
+        List<String> tags = generatorUpdateRequest.getTags();
         if (tags != null) {
             post.setTags(JSONUtil.toJsonStr(tags));
         }
         // 参数校验
         postService.validPost(post, false);
-        long id = postUpdateRequest.getId();
+        long id = generatorUpdateRequest.getId();
         // 判断是否存在
         Post oldPost = postService.getById(id);
         ThrowUtils.throwIf(oldPost == null, ErrorCode.NOT_FOUND_ERROR);
@@ -147,59 +147,59 @@ public class PostController {
     /**
      * 分页获取列表（仅管理员）
      *
-     * @param postQueryRequest
+     * @param generatorQueryRequest
      * @return
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Post>> listPostByPage(@RequestBody PostQueryRequest postQueryRequest) {
-        long current = postQueryRequest.getCurrent();
-        long size = postQueryRequest.getPageSize();
+    public BaseResponse<Page<Post>> listPostByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest) {
+        long current = generatorQueryRequest.getCurrent();
+        long size = generatorQueryRequest.getPageSize();
         Page<Post> postPage = postService.page(new Page<>(current, size),
-                postService.getQueryWrapper(postQueryRequest));
+                postService.getQueryWrapper(generatorQueryRequest));
         return ResultUtils.success(postPage);
     }
 
     /**
      * 分页获取列表（封装类）
      *
-     * @param postQueryRequest
+     * @param generatorQueryRequest
      * @param request
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
+    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
             HttpServletRequest request) {
-        long current = postQueryRequest.getCurrent();
-        long size = postQueryRequest.getPageSize();
+        long current = generatorQueryRequest.getCurrent();
+        long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Post> postPage = postService.page(new Page<>(current, size),
-                postService.getQueryWrapper(postQueryRequest));
+                postService.getQueryWrapper(generatorQueryRequest));
         return ResultUtils.success(postService.getPostVOPage(postPage, request));
     }
 
     /**
      * 分页获取当前用户创建的资源列表
      *
-     * @param postQueryRequest
+     * @param generatorQueryRequest
      * @param request
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
+    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
             HttpServletRequest request) {
-        if (postQueryRequest == null) {
+        if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User loginUser = userService.getLoginUser(request);
-        postQueryRequest.setUserId(loginUser.getId());
-        long current = postQueryRequest.getCurrent();
-        long size = postQueryRequest.getPageSize();
+        generatorQueryRequest.setUserId(loginUser.getId());
+        long current = generatorQueryRequest.getCurrent();
+        long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Post> postPage = postService.page(new Page<>(current, size),
-                postService.getQueryWrapper(postQueryRequest));
+                postService.getQueryWrapper(generatorQueryRequest));
         return ResultUtils.success(postService.getPostVOPage(postPage, request));
     }
 
@@ -213,7 +213,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editPost(@RequestBody PostEditRequest postEditRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> editPost(@RequestBody GeneratorEditRequest postEditRequest, HttpServletRequest request) {
         if (postEditRequest == null || postEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

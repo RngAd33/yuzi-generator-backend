@@ -1,4 +1,4 @@
-package com.yupi.web.model.dto.post;
+package com.yupi.web.model.dto.generator;
 
 import com.yupi.web.common.PageRequest;
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PostQueryRequest extends PageRequest implements Serializable {
+public class GeneratorQueryRequest extends PageRequest implements Serializable {
 
     /**
      * id

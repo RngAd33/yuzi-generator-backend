@@ -1,14 +1,19 @@
-package com.yupi.web.model.dto.post;
+package com.yupi.web.model.dto.generator;
 
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 
 /**
- * 创建请求
+ * 编辑请求
  */
 @Data
-public class PostAddRequest implements Serializable {
+public class GeneratorEditRequest implements Serializable {
+
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 标题

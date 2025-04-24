@@ -1,4 +1,4 @@
-package com.yupi.web.model.dto.post;
+package com.yupi.web.model.dto.generator;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,7 +8,7 @@ import lombok.Data;
  * 更新请求
  */
 @Data
-public class PostUpdateRequest implements Serializable {
+public class GeneratorUpdateRequest implements Serializable {
 
     /**
      * id

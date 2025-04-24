@@ -3,7 +3,7 @@ package com.yupi.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.web.model.dto.post.PostQueryRequest;
+import com.yupi.web.model.dto.generator.GeneratorQueryRequest;
 import com.yupi.web.model.entity.Post;
 import com.yupi.web.model.vo.PostVO;
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +24,10 @@ public interface PostService extends IService<Post> {
     /**
      * 获取查询条件
      *
-     * @param postQueryRequest
+     * @param generatorQueryRequest
      * @return
      */
-    QueryWrapper<Post> getQueryWrapper(PostQueryRequest postQueryRequest);
+    QueryWrapper<Post> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest);
 
     /**
      * 获取帖子封装
