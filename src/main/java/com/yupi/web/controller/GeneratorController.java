@@ -14,32 +14,29 @@ import com.yupi.web.model.dto.generator.GeneratorAddRequest;
 import com.yupi.web.model.dto.generator.GeneratorEditRequest;
 import com.yupi.web.model.dto.generator.GeneratorQueryRequest;
 import com.yupi.web.model.dto.generator.GeneratorUpdateRequest;
-import com.yupi.web.model.entity.Post;
+import com.yupi.web.model.entity.Generator;
 import com.yupi.web.model.entity.User;
 import com.yupi.web.model.vo.GeneratorVO;
-import com.yupi.web.service.PostService;
+import com.yupi.web.service.GeneratorService;
 import com.yupi.web.service.UserService;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 帖子接口
  */
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/generator")
 @Slf4j
-public class PostController {
+public class GeneratorController {
 
     @Resource
-    private PostService postService;
+    private GeneratorService generatorService;
 
     @Resource
     private UserService userService;
@@ -49,28 +46,28 @@ public class PostController {
     /**
      * 创建
      *
-     * @param postAddRequest
+     * @param generatorAddRequest
      * @param request
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addPost(@RequestBody GeneratorAddRequest postAddRequest, HttpServletRequest request) {
-        if (postAddRequest == null) {
+    public BaseResponse<Long> addGenerator(@RequestBody GeneratorAddRequest generatorAddRequest, HttpServletRequest request) {
+        if (generatorAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Post post = new Post();
-        BeanUtils.copyProperties(postAddRequest, post);
-        List<String> tags = postAddRequest.getTags();
+        Generator generator = new Generator();
+        BeanUtils.copyProperties(generatorAddRequest, generator);
+        List<String> tags = generatorAddRequest.getTags();
         if (tags != null) {
-            post.setTags(JSONUtil.toJsonStr(tags));
+            generator.setTags(JSONUtil.toJsonStr(tags));
         }
-        postService.validPost(post, true);
+        generatorService.validGenerator(generator, true);
         User loginUser = userService.getLoginUser(request);
-        post.setUserId(loginUser.getId());
-        boolean result = postService.save(post);
+        generator.setUserId(loginUser.getId());
+        boolean result = generatorService.save(generator);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        long newPostId = post.getId();
-        return ResultUtils.success(newPostId);
+        long newGeneratorId = generator.getId();
+        return ResultUtils.success(newGeneratorId);
     }
 
     /**
@@ -81,20 +78,20 @@ public class PostController {
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deletePost(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteGenerator(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User user = userService.getLoginUser(request);
         long id = deleteRequest.getId();
         // 判断是否存在
-        Post oldPost = postService.getById(id);
-        ThrowUtils.throwIf(oldPost == null, ErrorCode.NOT_FOUND_ERROR);
+        Generator oldGenerator = generatorService.getById(id);
+        ThrowUtils.throwIf(oldGenerator == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldPost.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldGenerator.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
-        boolean b = postService.removeById(id);
+        boolean b = generatorService.removeById(id);
         return ResultUtils.success(b);
     }
 
@@ -106,23 +103,23 @@ public class PostController {
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updatePost(@RequestBody GeneratorUpdateRequest generatorUpdateRequest) {
+    public BaseResponse<Boolean> updateGenerator(@RequestBody GeneratorUpdateRequest generatorUpdateRequest) {
         if (generatorUpdateRequest == null || generatorUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Post post = new Post();
-        BeanUtils.copyProperties(generatorUpdateRequest, post);
+        Generator generator = new Generator();
+        BeanUtils.copyProperties(generatorUpdateRequest, generator);
         List<String> tags = generatorUpdateRequest.getTags();
         if (tags != null) {
-            post.setTags(JSONUtil.toJsonStr(tags));
+            generator.setTags(JSONUtil.toJsonStr(tags));
         }
         // 参数校验
-        postService.validPost(post, false);
+        generatorService.validGenerator(generator, false);
         long id = generatorUpdateRequest.getId();
         // 判断是否存在
-        Post oldPost = postService.getById(id);
-        ThrowUtils.throwIf(oldPost == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = postService.updateById(post);
+        Generator oldGenerator = generatorService.getById(id);
+        ThrowUtils.throwIf(oldGenerator == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = generatorService.updateById(generator);
         return ResultUtils.success(result);
     }
 
@@ -133,15 +130,15 @@ public class PostController {
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<GeneratorVO> getPostVOById(long id, HttpServletRequest request) {
+    public BaseResponse<GeneratorVO> getGeneratorVOById(long id, HttpServletRequest request) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Post post = postService.getById(id);
-        if (post == null) {
+        Generator generator = generatorService.getById(id);
+        if (generator == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        return ResultUtils.success(postService.getPostVO(post, request));
+        return ResultUtils.success(generatorService.getGeneratorVO(generator, request));
     }
 
     /**
@@ -152,12 +149,12 @@ public class PostController {
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Post>> listPostByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest) {
+    public BaseResponse<Page<Generator>> listGeneratorByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest) {
         long current = generatorQueryRequest.getCurrent();
         long size = generatorQueryRequest.getPageSize();
-        Page<Post> postPage = postService.page(new Page<>(current, size),
-                postService.getQueryWrapper(generatorQueryRequest));
-        return ResultUtils.success(postPage);
+        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
+                generatorService.getQueryWrapper(generatorQueryRequest));
+        return ResultUtils.success(generatorPage);
     }
 
     /**
@@ -168,15 +165,15 @@ public class PostController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<GeneratorVO>> listPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+    public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
                                                             HttpServletRequest request) {
         long current = generatorQueryRequest.getCurrent();
         long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<Post> postPage = postService.page(new Page<>(current, size),
-                postService.getQueryWrapper(generatorQueryRequest));
-        return ResultUtils.success(postService.getPostVOPage(postPage, request));
+        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
+                generatorService.getQueryWrapper(generatorQueryRequest));
+        return ResultUtils.success(generatorService.getGeneratorVOPage(generatorPage, request));
     }
 
     /**
@@ -187,20 +184,20 @@ public class PostController {
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<GeneratorVO>> listMyPostVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+    public BaseResponse<Page<GeneratorVO>> listMyGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
                                                               HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User loginUser = userService.getLoginUser(request);
-        generatorQueryRequest.setUserId(loginUser.getId());
+        generatorQueryRequest.setId(loginUser.getId());
         long current = generatorQueryRequest.getCurrent();
         long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<Post> postPage = postService.page(new Page<>(current, size),
-                postService.getQueryWrapper(generatorQueryRequest));
-        return ResultUtils.success(postService.getPostVOPage(postPage, request));
+        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
+                generatorService.getQueryWrapper(generatorQueryRequest));
+        return ResultUtils.success(generatorService.getGeneratorVOPage(generatorPage, request));
     }
 
     // endregion
@@ -208,33 +205,33 @@ public class PostController {
     /**
      * 编辑（用户）
      *
-     * @param postEditRequest
+     * @param generatorEditRequest
      * @param request
      * @return
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editPost(@RequestBody GeneratorEditRequest postEditRequest, HttpServletRequest request) {
-        if (postEditRequest == null || postEditRequest.getId() <= 0) {
+    public BaseResponse<Boolean> editGenerator(@RequestBody GeneratorEditRequest generatorEditRequest, HttpServletRequest request) {
+        if (generatorEditRequest == null || generatorEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Post post = new Post();
-        BeanUtils.copyProperties(postEditRequest, post);
-        List<String> tags = postEditRequest.getTags();
+        Generator generator = new Generator();
+        BeanUtils.copyProperties(generatorEditRequest, generator);
+        List<String> tags = generatorEditRequest.getTags();
         if (tags != null) {
-            post.setTags(JSONUtil.toJsonStr(tags));
+            generator.setTags(JSONUtil.toJsonStr(tags));
         }
         // 参数校验
-        postService.validPost(post, false);
+        generatorService.validGenerator(generator, false);
         User loginUser = userService.getLoginUser(request);
-        long id = postEditRequest.getId();
+        long id = generatorEditRequest.getId();
         // 判断是否存在
-        Post oldPost = postService.getById(id);
-        ThrowUtils.throwIf(oldPost == null, ErrorCode.NOT_FOUND_ERROR);
+        Generator oldGenerator = generatorService.getById(id);
+        ThrowUtils.throwIf(oldGenerator == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!oldPost.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        if (!oldGenerator.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
-        boolean result = postService.updateById(post);
+        boolean result = generatorService.updateById(generator);
         return ResultUtils.success(result);
     }
 
