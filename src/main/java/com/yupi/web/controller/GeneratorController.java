@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
- * 帖子接口
+ * 代码生成器接口
  */
 @RestController
 @RequestMapping("/generator")

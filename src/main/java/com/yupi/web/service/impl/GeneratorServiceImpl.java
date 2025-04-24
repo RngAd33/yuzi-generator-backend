@@ -16,8 +16,6 @@ import com.yupi.web.model.vo.UserVO;
 import com.yupi.web.service.GeneratorService;
 import com.yupi.web.service.UserService;
 import com.yupi.web.utils.SqlUtils;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
