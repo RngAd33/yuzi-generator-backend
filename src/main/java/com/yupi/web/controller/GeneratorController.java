@@ -114,9 +114,11 @@ public class GeneratorController {
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorUpdateRequest, generator);
         List<String> tags = generatorUpdateRequest.getTags();
-        if (tags != null) {
-            generator.setTags(JSONUtil.toJsonStr(tags));
-        }
+        Meta.FileConfig fileConfig = generatorUpdateRequest.getFileConfig();
+        generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
+        Meta.ModelConfig modelConfig = generatorUpdateRequest.getModelConfig();
+        generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
+
         // 参数校验
         generatorService.validGenerator(generator, false);
         long id = generatorUpdateRequest.getId();
@@ -221,9 +223,11 @@ public class GeneratorController {
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorEditRequest, generator);
         List<String> tags = generatorEditRequest.getTags();
-        if (tags != null) {
-            generator.setTags(JSONUtil.toJsonStr(tags));
-        }
+        Meta.FileConfig fileConfig = generatorEditRequest.getFileConfig();
+        generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
+        Meta.ModelConfig modelConfig = generatorEditRequest.getModelConfig();
+        generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
+
         // 参数校验
         generatorService.validGenerator(generator, false);
         User loginUser = userService.getLoginUser(request);
