@@ -67,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 账户不能重复
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("userAccount", userAccount);
-            long count = this.baseMapper.selectCount(queryWrapper);
+            long count = userMapper.selectCount(queryWrapper);
             if (count > 0) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
             }
@@ -112,12 +112,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         synchronized (userAccount.intern()) {
             // 2. 加密
             String encryptPassword = AESUtils.doEncrypt(userPassword);
-
             // 查询用户是否存在
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("userAccount", userAccount);
             queryWrapper.eq("userPassword", encryptPassword);
-            User user = this.baseMapper.selectOne(queryWrapper);
+            User user = userMapper.selectOne(queryWrapper);
             // 用户不存在
             if (user == null) {
                 log.info("user login failed, userAccount cannot match userPassword");
