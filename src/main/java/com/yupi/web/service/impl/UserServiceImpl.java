@@ -13,13 +13,14 @@ import com.yupi.web.model.enums.UserRoleEnum;
 import com.yupi.web.model.vo.LoginUserVO;
 import com.yupi.web.model.vo.UserVO;
 import com.yupi.web.service.UserService;
+import com.yupi.web.utils.AESUtils;
 import com.yupi.web.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +34,8 @@ import static com.yupi.web.constant.UserConstant.USER_LOGIN_STATE;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    /**
-     * 盐值，混淆密码
-     */
-    public static final String SALT = "RngAd33";
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * 用户注册
@@ -47,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
-    public long userRegister(String userAccount, String userPassword, String checkPassword) {
+    public long userRegister(String userAccount, String userPassword, String checkPassword) throws Exception {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -74,7 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
 
             // 2. 加密
-            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+            String encryptPassword = AESUtils.doEncrypt(userPassword);
 
             // 3. 插入数据
             User user = new User();
@@ -97,7 +96,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
-    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) throws Exception {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -108,21 +107,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userPassword.length() < 8) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码错误");
         }
-        // 2. 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
-        // 查询用户是否存在
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
-        queryWrapper.eq("userPassword", encryptPassword);
-        User user = this.baseMapper.selectOne(queryWrapper);
-        // 用户不存在
-        if (user == null) {
-            log.info("user login failed, userAccount cannot match userPassword");
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
+
+        // 单机锁
+        synchronized (userAccount.intern()) {
+            // 2. 加密
+            String encryptPassword = AESUtils.doEncrypt(userPassword);
+
+            // 查询用户是否存在
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("userAccount", userAccount);
+            queryWrapper.eq("userPassword", encryptPassword);
+            User user = this.baseMapper.selectOne(queryWrapper);
+            // 用户不存在
+            if (user == null) {
+                log.info("user login failed, userAccount cannot match userPassword");
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
+            }
+            // 3. 记录用户的登录态
+            request.getSession().setAttribute(USER_LOGIN_STATE, user);
+            return this.getLoginUserVO(user);
         }
-        // 3. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return this.getLoginUserVO(user);
     }
 
     /**
