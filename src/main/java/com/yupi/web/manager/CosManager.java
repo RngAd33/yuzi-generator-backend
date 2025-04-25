@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 import java.io.File;
 
 /**
- * Cos 对象存储操作
+ * Cos对象存储操作
  */
 @Component
 public class CosManager {
