@@ -283,7 +283,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 获取脱敏的用户信息
+     * 获取脱敏的用户信息列表
      *
      * @param userList
      * @return

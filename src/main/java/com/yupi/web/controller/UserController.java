@@ -110,7 +110,7 @@ public class UserController {
     }
 
     /**
-     * 用户注销
+     * 退出登录
      *
      * @param request
      * @return
@@ -130,7 +130,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @GetMapping("/get/login")
+    @GetMapping("/current")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
@@ -280,7 +280,7 @@ public class UserController {
     // endregion
 
     /**
-     * 更新个人信息
+     * 更新个人信息（仅管理员）
      *
      * @param userUpdateMyRequest
      * @param request
