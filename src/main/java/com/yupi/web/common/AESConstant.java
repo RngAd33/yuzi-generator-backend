@@ -1,4 +1,4 @@
-package com.yupi.usercenter.constant;
+package com.yupi.web.common;
 
 import java.io.File;
 
