@@ -176,7 +176,7 @@ public class AESUtils {
     }
 
     /**
-     * 测试方法
+     * 测试方法（需要生成密钥和轮向量时使用）
      *
      * @param args
      * @throws Exception
@@ -185,13 +185,12 @@ public class AESUtils {
         /* 生成随机密钥和IV
         SecretKey key = generateKey();
         byte[] iv = generateIV();
-
         // 保存密钥和IV到文件
         saveKey(key);
         System.out.println("密钥已保存到文件。");
         saveIV(iv);
         System.out.println("IV已保存到文件。");
-         */
+        */
 
         // 从文件加载密钥
         SecretKey loadedKey = loadKey();
