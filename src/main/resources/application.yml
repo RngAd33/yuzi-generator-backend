@@ -15,21 +15,23 @@ spring:
     # store-type: redis
     # 30 天过期
     timeout: 2592000
+
   # 数据库配置
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yuzi_generator_db
-    username: root
-    password: 123456
+    url: ${sky.database.url}
+    username: ${sky.database.username}
+    password: ${sky.database.password}
+
   # Redis 配置
   # todo 需替换配置，然后取消注释
   #  redis:
-  #    database: 1
-  #    host: localhost
-  #    port: 6379
-  #    timeout: 5000
-  #    password: 123456
+  #    database: ${sky.redis.database}
+  #    host: ${sky.redis.host}
+  #    port: ${sky.redis.port}
+  #    timeout: ${sky.redis.timeout}
+  #    password: ${sky.redis.password}
 
   # 文件上传
   servlet:
@@ -39,13 +41,14 @@ spring:
 
 server:
   address: 0.0.0.0
-  port: 8080
+  port: 8101
   servlet:
     context-path: /api
     # cookie 30 天过期
     session:
       cookie:
         max-age: 2592000
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
@@ -91,7 +94,7 @@ cos:
 knife4j:
   enable: true
   openapi:
-    title: "接口文档"
+    title: "代码生成器平台接口文档"
     version: 1.0
     group:
       default:
