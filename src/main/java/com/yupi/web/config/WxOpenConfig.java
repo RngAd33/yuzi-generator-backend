@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 微信开放平台配置
  */
+@Data
 @Slf4j
 @Configuration
 @ConfigurationProperties(prefix = "wx.open")
-@Data
 public class WxOpenConfig {
 
     private String appId;
