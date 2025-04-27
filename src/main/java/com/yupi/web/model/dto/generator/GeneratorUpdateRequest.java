@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 更新请求（管理员）
+ * 更新请求（仅管理员）
  */
 @Data
 public class GeneratorUpdateRequest implements Serializable {

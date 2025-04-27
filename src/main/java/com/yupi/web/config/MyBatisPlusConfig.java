@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @MapperScan("com.yupi.web.mapper")
 public class MyBatisPlusConfig {
-
     /**
      * 拦截器配置
      *
@@ -26,4 +25,5 @@ public class MyBatisPlusConfig {
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }
+
 }

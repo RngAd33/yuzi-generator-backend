@@ -37,9 +37,15 @@ public class WxMpController {
     @Resource
     private WxMpMessageRouter router;
 
+    /**
+     * 消息接收
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @PostMapping("/")
-    public void receiveMessage(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void receiveMessage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         // 校验消息签名，判断是否为公众平台发的消息
@@ -77,6 +83,15 @@ public class WxMpController {
         response.getWriter().println("不可识别的加密类型");
     }
 
+    /**
+     * 选择菜单
+     *
+     * @param timestamp
+     * @param nonce
+     * @param signature
+     * @param echostr
+     * @return
+     */
     @GetMapping("/")
     public String check(String timestamp, String nonce, String signature, String echostr) {
         log.info("check");
@@ -101,12 +116,11 @@ public class WxMpController {
         WxMenuButton wxMenuButton1 = new WxMenuButton();
         wxMenuButton1.setType(MenuButtonType.VIEW);
         wxMenuButton1.setName("主菜单一");
-        // 子菜单
+        // - 子菜单
         WxMenuButton wxMenuButton1SubButton1 = new WxMenuButton();
         wxMenuButton1SubButton1.setType(MenuButtonType.VIEW);
         wxMenuButton1SubButton1.setName("跳转页面");
-        wxMenuButton1SubButton1.setUrl(
-                "https://yupi.icu");
+        wxMenuButton1SubButton1.setUrl("https://yupi.icu");
         wxMenuButton1.setSubButtons(Collections.singletonList(wxMenuButton1SubButton1));
 
         // 菜单二
@@ -119,6 +133,7 @@ public class WxMpController {
         WxMenuButton wxMenuButton3 = new WxMenuButton();
         wxMenuButton3.setType(MenuButtonType.VIEW);
         wxMenuButton3.setName("主菜单三");
+        // - 子菜单
         WxMenuButton wxMenuButton3SubButton1 = new WxMenuButton();
         wxMenuButton3SubButton1.setType(MenuButtonType.VIEW);
         wxMenuButton3SubButton1.setName("编程学习");
@@ -130,4 +145,5 @@ public class WxMpController {
         wxMpService.getMenuService().menuCreate(wxMenu);
         return "ok";
     }
+
 }

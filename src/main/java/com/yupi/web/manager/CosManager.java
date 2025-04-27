@@ -4,10 +4,9 @@ import com.qcloud.cos.COSClient;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.yupi.web.config.CosClientConfig;
-import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 import java.io.File;
+import org.springframework.stereotype.Component;
 
 /**
  * Cos对象存储操作
@@ -22,7 +21,7 @@ public class CosManager {
     private COSClient cosClient;
 
     /**
-     * 上传对象
+     * 上传对象（路径）
      *
      * @param key           唯一键
      * @param localFilePath 本地文件路径
@@ -35,7 +34,7 @@ public class CosManager {
     }
 
     /**
-     * 上传对象
+     * 上传对象（文件）
      *
      * @param key  唯一键
      * @param file 文件
@@ -46,4 +45,5 @@ public class CosManager {
                 file);
         return cosClient.putObject(putObjectRequest);
     }
+
 }
